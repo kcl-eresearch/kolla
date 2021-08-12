@@ -10,10 +10,14 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
 {% if base_package_type == 'rpm' %}
     {% set keystone_packages = [
         'mod_auth_gssapi',
+        'mod_auth_mellon',
+        'python3-requests-kerberos'
     ] %}
 {% elif base_package_type == 'deb' %}
     {% set keystone_packages = [
         'libapache2-mod-auth-gssapi',
+        'libapache2-mod-auth-mellon',
+        'python3-requests-kerberos'
     ] %}
 {% endif %}
 {{ macros.install_packages(keystone_packages | customizable("packages")) }}
