@@ -15,12 +15,14 @@ RUN chmod 755 /usr/local/bin/kolla_extend_start /usr/local/bin/kolla_keystone_bo
     {% if base_package_type == 'rpm' %}
         {% set keystone_packages = [
             'mod_auth_gssapi',
+            'mod_auth_mellon',
             'python3-requests-kerberos'
         ] %}
     {% elif base_package_type == 'deb' %}
         {% set keystone_packages = [
             'libapache2-mod-auth-gssapi',
-            'python3-requests-kerberos',
+            'libapache2-mod-auth-mellon',
+            'python3-requests-kerberos'
         ] %}
     {% endif %}
 {{ macros.install_packages(keystone_packages | customizable("packages")) }}
@@ -28,10 +30,12 @@ RUN chmod 755 /usr/local/bin/kolla_extend_start /usr/local/bin/kolla_keystone_bo
     {% if base_package_type == 'rpm' %}
         {% set keystone_packages = [
             'mod_auth_gssapi',
+            'mod_auth_mellon'
         ] %}
     {% elif base_package_type == 'deb' %}
         {% set keystone_packages = [
             'libapache2-mod-auth-gssapi',
+            'libapache2-mod-auth-mellon'
         ] %}
     {% endif %}
 {{ macros.install_packages(keystone_packages | customizable("packages")) }}
