@@ -360,7 +360,7 @@ def handle_permissions(config):
 
             try:
                 os.chown(path, uid, gid)
-            except OSError:
+            except:
                 LOG.exception('Failed to change ownership of %s to %s:%s',
                               path, uid, gid)
 
@@ -382,7 +382,7 @@ def handle_permissions(config):
 
                 try:
                     os.chmod(path, perm)
-                except OSError:
+                except:
                     LOG.exception('Failed to set permission of %s to %s',
                                   path, perm)
 
