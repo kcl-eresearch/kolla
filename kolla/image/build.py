@@ -332,9 +332,14 @@ class PushTask(DockerTask):
 
         # Since docker 3.0.0, the argument of 'insecure_registry' is removed.
         # To be compatible, set 'insecure_registry=True' for old releases.
-        dc_running_ver = StrictVersion(docker.version)
-        if dc_running_ver < StrictVersion('3.0.0'):
-            kwargs['insecure_registry'] = True
+        # NOTE(frickler): The version check will fail for docker >= 6.0, but
+        # in that case we know that the workaround isn't needed.
+        try:
+            dc_running_ver = StrictVersion(docker.version)
+            if dc_running_ver < StrictVersion('3.0.0'):
+                kwargs['insecure_registry'] = True
+        except TypeError:
+            pass
 
         for response in self.dc.push(image.canonical_name, **kwargs):
             if 'stream' in response:
@@ -513,8 +518,18 @@ class BuildTask(DockerTask):
                         image.status = Status.CONNECTION_ERROR
                         raise ArchivingError
             arc_path = os.path.join(image.path, '%s-archive' % arcname)
+
+            # NOTE(jneumann): Change ownership of files to root:root. This
+            # avoids an issue introduced by the fix for git CVE-2022-24765,
+            # which breaks PBR when the source checkout is not owned by the
+            # user installing it. LP#1969096
+            def reset_userinfo(tarinfo):
+                tarinfo.uid = tarinfo.gid = 0
+                tarinfo.uname = tarinfo.gname = "root"
+                return tarinfo
+
             with tarfile.open(arc_path, 'w') as tar:
-                tar.add(items_path, arcname=arcname)
+                tar.add(items_path, arcname=arcname, filter=reset_userinfo)
             return len(os.listdir(items_path))
 
         self.logger.debug('Processing')
