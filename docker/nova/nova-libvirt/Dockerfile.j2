@@ -22,11 +22,12 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
         'libvirt-daemon',
         'libvirt-daemon-config-nwfilter',
         'libvirt-daemon-driver-nwfilter',
+        'libvirt-daemon-driver-nodedev',
         'openvswitch',
         'qemu-img',
         'qemu-kvm',
     ] %}
-    {% if not base_distro_tag.startswith('stream9') %}
+    {% if not base_distro_tag.startswith('stream9') and not base_distro == 'rocky' %}
         {% set nova_libvirt_packages = nova_libvirt_packages + [
             'trousers'
         ] %}

@@ -13,6 +13,8 @@ centos:
   kibana: "elasticsearch-kibana-logstash-7.x"
   logstash: "elasticsearch-kibana-logstash-7.x"
   mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
   openvswitch: "centos-nfv-openvswitch"
   opstools: "centos-opstools"
   powertools: "powertools"
@@ -33,6 +35,8 @@ centos-aarch64:
   kibana: "elasticsearch-kibana-logstash-7.x"
   logstash: "elasticsearch-kibana-logstash-7.x"
   mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
   openvswitch: "centos-nfv-openvswitch"
   opstools: "centos-opstools"
   powertools: "powertools"
@@ -50,6 +54,8 @@ centos9:
   hacluster: "highavailability"
   influxdb: "influxdb"
   mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
   openvswitch: "centos-nfv-openvswitch"
   opstools: "centos-opstools"
   proxysql: "proxysql"
@@ -66,6 +72,8 @@ centos9-aarch64:
   hacluster: "highavailability"
   influxdb: "influxdb"
   mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
   openvswitch: "centos-nfv-openvswitch"
   opstools: "centos-opstools"
   proxysql: "proxysql"
@@ -79,7 +87,7 @@ debian:
     component: "main"
     gpg_key: "elasticsearch.asc"
   erlang:
-    url: "https://ppa.launchpadcontent.net/rabbitmq/rabbitmq-erlang/ubuntu"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/ubuntu"
     suite: "focal"
     component: "main"
     gpg_key: "erlang-ppa.gpg"
@@ -108,8 +116,23 @@ debian:
     suite: "bullseye"
     component: "main"
     gpg_key: "mariadb.gpg"
+  opensearch:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  opensearch-dashboards:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  proxysql:
+    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/bullseye/"
+    suite: "./"
+    component: ""
+    gpg_key: "proxysql.asc"
   rabbitmq:
-    url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/debian"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/debian"
     suite: "bullseye"
     component: "main"
     gpg_key: "rabbitmq.gpg"
@@ -118,11 +141,6 @@ debian:
     suite: "bullseye"
     component: "contrib"
     gpg_key: "treasuredata.asc"
-  proxysql:
-    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/bullseye/"
-    suite: "./"
-    component: ""
-    gpg_key: "proxysql.asc"
 
 debian-aarch64:
   elasticsearch:
@@ -131,7 +149,7 @@ debian-aarch64:
     component: "main"
     gpg_key: "elasticsearch.asc"
   erlang:
-    url: "https://ppa.launchpadcontent.net/rabbitmq/rabbitmq-erlang/ubuntu"
+    url: "https://ppa.launchpadcontent.net/rabbitmq/rabbitmq-erlang-25/ubuntu"
     suite: "focal"
     component: "main"
     gpg_key: "erlang-ppa.gpg"
@@ -160,21 +178,74 @@ debian-aarch64:
     suite: "bullseye"
     component: "main"
     gpg_key: "mariadb.gpg"
+  opensearch:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  opensearch-dashboards:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  proxysql:
+    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/bullseye/"
+    suite: "./"
+    component: ""
+    gpg_key: "proxysql.asc"
   rabbitmq:
-    url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/debian"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/debian"
     suite: "bullseye"
     component: "main"
+    arch: "amd64"
     gpg_key: "rabbitmq.gpg"
   td-agent:
     url: "http://packages.treasuredata.com/4/debian/bullseye"
     suite: "bullseye"
     component: "contrib"
     gpg_key: "treasuredata.asc"
-  proxysql:
-    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/bullseye/"
-    suite: "./"
-    component: ""
-    gpg_key: "proxysql.asc"
+
+rocky:
+  ceph: "centos-ceph-pacific"
+  crb: "crb"
+  elasticsearch: "elasticsearch-kibana-logstash-7.x"
+  epel: "epel"
+  erlang: "rabbitmq_rabbitmq-erlang"
+  extras: "extras"
+  grafana: "grafana"
+  hacluster: "highavailability"
+  influxdb: "influxdb"
+  kibana: "elasticsearch-kibana-logstash-7.x"
+  logstash: "elasticsearch-kibana-logstash-7.x"
+  mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
+  openvswitch: "centos-nfv-openvswitch"
+  opstools: "centos-opstools"
+  proxysql: "proxysql"
+  rabbitmq: "rabbitmq_rabbitmq-server"
+  td-agent: "treasuredata"
+
+rocky-aarch64:
+  ceph: "centos-ceph-pacific"
+  crb: "crb"
+  elasticsearch: "elasticsearch-kibana-logstash-7.x"
+  epel: "epel"
+  erlang: "centos-rabbitmq-38"
+  extras: "extras"
+  grafana: "grafana"
+  influxdb: "influxdb"
+  hacluster: "highavailability"
+  kibana: "elasticsearch-kibana-logstash-7.x"
+  logstash: "elasticsearch-kibana-logstash-7.x"
+  mariadb: "mariadb"
+  opensearch: "opensearch-2.x"
+  opensearch-dashboards: "opensearch-dashboards-2.x"
+  openvswitch: "centos-nfv-openvswitch"
+  opstools: "centos-opstools"
+  proxysql: "proxysql"
+  rabbitmq: "rabbitmq_rabbitmq-server"
+  td-agent: "treasuredata"
 
 ubuntu:
   elasticsearch:
@@ -183,7 +254,7 @@ ubuntu:
     component: "main"
     gpg_key: "elasticsearch.asc"
   erlang:
-    url: "https://ppa.launchpadcontent.net/rabbitmq/rabbitmq-erlang/ubuntu"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/ubuntu"
     suite: "focal"
     component: "main"
     gpg_key: "erlang-ppa.gpg"
@@ -217,8 +288,23 @@ ubuntu:
     suite: "focal"
     component: "main"
     gpg_key: "mariadb.gpg"
+  opensearch:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  opensearch-dashboards:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  proxysql:
+    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/focal/"
+    suite: "./"
+    component: ""
+    gpg_key: "proxysql.asc"
   rabbitmq:
-    url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu"
     suite: "focal"
     component: "main"
     gpg_key: "rabbitmq.gpg"
@@ -227,11 +313,6 @@ ubuntu:
     suite: "focal"
     component: "contrib"
     gpg_key: "treasuredata.asc"
-  proxysql:
-    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/focal/"
-    suite: "./"
-    component: ""
-    gpg_key: "proxysql.asc"
 
 ubuntu-aarch64:
   elasticsearch:
@@ -240,7 +321,7 @@ ubuntu-aarch64:
     component: "main"
     gpg_key: "elasticsearch.asc"
   erlang:
-    url: "https://ppa.launchpadcontent.net/rabbitmq/rabbitmq-erlang/ubuntu"
+    url: "https://launchpad.net/~rabbitmq/+archive/ubuntu/rabbitmq-erlang-25"
     suite: "focal"
     component: "main"
     gpg_key: "erlang-ppa.gpg"
@@ -269,18 +350,29 @@ ubuntu-aarch64:
     suite: "focal"
     component: "main"
     gpg_key: "mariadb.gpg"
+  opensearch:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  opensearch-dashboards:
+    url: "https://artifacts.opensearch.org/releases/bundle/opensearch-dashboards/2.x/apt/"
+    suite: "stable"
+    component: "main"
+    gpg_key: "opensearch.asc"
+  proxysql:
+    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/focal/"
+    suite: "./"
+    component: ""
+    gpg_key: "proxysql.asc"
   rabbitmq:
-    url: "https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu"
+    url: "https://ppa1.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu"
     suite: "focal"
     component: "main"
+    arch: "amd64"
     gpg_key: "rabbitmq.gpg"
   td-agent:
     url: "http://packages.treasuredata.com/4/ubuntu/focal/"
     suite: "focal"
     component: "contrib"
     gpg_key: "treasuredata.asc"
-  proxysql:
-    url: "https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/focal/"
-    suite: "./"
-    component: ""
-    gpg_key: "proxysql.asc"

@@ -19,17 +19,19 @@ from oslo_config import types
 from kolla.version import version_info as version
 
 
-BASE_OS_DISTRO = ['centos', 'debian', 'ubuntu']
+BASE_OS_DISTRO = ['centos', 'debian', 'rocky', 'ubuntu']
 BASE_ARCH = ['x86_64', 'aarch64']
 DEFAULT_BASE_TAGS = {
     'centos': {'name': 'quay.io/centos/centos', 'tag': 'stream8'},
     'debian': {'name': 'debian', 'tag': 'bullseye'},
+    'rocky': {'name': 'quay.io/rockylinux/rockylinux', 'tag': '9'},
     'ubuntu': {'name': 'ubuntu', 'tag': '20.04'},
 }
 # NOTE(hrw): has to match PRETTY_NAME in /etc/os-release
 DISTRO_PRETTY_NAME = {
     'centos': 'CentOS Stream {8,9}',
     'debian': 'Debian GNU/Linux 11 (bullseye)',
+    'rocky': 'Rocky Linux 9.* (Blue Onyx)',
     'ubuntu': 'Ubuntu 20.04',
 }
 OPENSTACK_RELEASE = 'yoga'
@@ -340,7 +342,7 @@ SOURCES = {
                      'glance-${openstack_branch}.tar.gz')},
     'gnocchi-base': {
         'type': 'git',
-        'reference': '4.4.1',
+        'reference': '4.4.4',
         'location': ('https://github.com/gnocchixyz/'
                      'gnocchi.git')},
     'heat-base': {
@@ -958,6 +960,10 @@ USERS = {
     'opensearch-user': {
         'uid': 42490,
         'gid': 42490,
+    },
+    'opensearch-dashboards-user': {
+        'uid': 42492,
+        'gid': 42492,
     }
 }
 
@@ -1032,7 +1038,7 @@ def parse(conf, args, usage=None, prog=None,
     # NOTE(jeffrey4l): set the default base tag based on the
     # base option
     conf.set_default('base_tag', DEFAULT_BASE_TAGS[conf.base]['tag'])
-    prefix = '' if conf.openstack_release == 'master' else 'stable-'
+    prefix = '' if conf.openstack_release == 'master' else 'unmaintained-'
     openstack_branch = '{}{}'.format(prefix, conf.openstack_release)
     openstack_branch_slashed = openstack_branch.replace('-', '/')
     conf.set_default('openstack_branch', openstack_branch)
