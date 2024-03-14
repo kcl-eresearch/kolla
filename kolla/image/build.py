@@ -80,10 +80,10 @@ LOG = utils.make_a_logger()
 # is irrelevant. Otherwise all must match for skip to happen.
 UNBUILDABLE_IMAGES = {
     'aarch64': {
-        "bifrost-base",      # someone need to get upstream working first
+        "bifrost-base",        # someone need to get upstream working first
         "prometheus-msteams",  # no aarch64 binary
-        "prometheus-mtail",  # no aarch64 binary
-        "skydive-base",      # no aarch64 binary
+        "prometheus-mtail",    # no aarch64 binary
+        "skydive-base",        # no aarch64 binary
     },
 
     'binary': {
@@ -113,16 +113,36 @@ UNBUILDABLE_IMAGES = {
     # https://github.com/grafana/grafana/issues/41036
     'centos9': {
         "elasticsearch",         # SHA1 gpg key
+        "elasticsearch-curator",
         "hacluster-pcs",         # Missing crmsh package
         "kibana",                # SHA1 gpg key
         "logstash",              # SHA1 gpg key
+        "kafka",                 # Monasca dependency
+        "monasca-base",          # No support for OpenSearch
         "nova-spicehtml5proxy",  # Missing spicehtml5 package
         "ovsdpdk",               # Not supported on CentOS
+        "proxysql",              # 2.3 not supported on EL9
+        "storm-base",            # Monasca dependency
         "tgtd",                  # Not supported on CentOS
     },
 
     'debian': {
         "qdrouterd",     # no qdrouterd package in Debian bullseye
+    },
+
+    'rocky': {
+        "elasticsearch",         # SHA1 gpg key
+        "elasticsearch-curator",
+        "hacluster-pcs",         # Missing crmsh package
+        "kibana",                # SHA1 gpg key
+        "logstash",              # SHA1 gpg key
+        "kafka",                 # Monasca dependency
+        "monasca-base",          # No support for OpenSearch
+        "nova-spicehtml5proxy",  # Missing spicehtml5 package
+        "ovsdpdk",               # Not supported on CentOS
+        "proxysql",              # 2.3 not supported on EL9
+        "storm-base",            # Monasca dependency
+        "tgtd",                  # Not supported on CentOS
     },
 
     'ubuntu': {
@@ -482,6 +502,14 @@ class BuildTask(DockerTask):
 
     def builder(self, image):
 
+        def _test_malicious_tarball(archive, path):
+            tar_file = tarfile.open(archive, 'r|*')
+            for n in tar_file.getnames():
+                if not os.path.abspath(os.path.join(path, n)).startswith(path):
+                    tar_file.close()
+                    self.logger.error(f'Unsafe filenames in archive {archive}')
+                    raise ArchivingError
+
         def make_an_archive(items, arcname, item_child_path=None):
             if not item_child_path:
                 item_child_path = arcname
@@ -495,8 +523,9 @@ class BuildTask(DockerTask):
                     archives.append(archive_path)
             if archives:
                 for archive in archives:
+                    _test_malicious_tarball(archive, items_path)
                     with tarfile.open(archive, 'r') as archive_tar:
-                        archive_tar.extractall(path=items_path)
+                        archive_tar.extractall(path=items_path)  # nosec
             else:
                 try:
                     os.mkdir(items_path)
@@ -708,7 +737,7 @@ class KollaWorker(object):
 
             self.distro_package_manager = 'dnf'
             self.base_package_type = 'rpm'
-        elif self.base in ['centos9']:
+        elif self.base in ['rocky']:
             self.conf.distro_python_version = "3.9"
             self.distro_package_manager = 'dnf'
             self.base_package_type = 'rpm'

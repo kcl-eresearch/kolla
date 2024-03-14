@@ -8,25 +8,15 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
 {% import "macros.j2" as macros with context %}
 
 {{ macros.configure_user(name='opensearch', shell='/bin/bash', homedir='/usr/share/opensearch') }}
+{{ macros.enable_extra_repos(['opensearch']) }}
 
-{% block opensearch_version %}
+    {% set opensearch_packages = [
+        'opensearch'
+    ] %}
 
-    {% if base_arch == 'x86_64' %}
-        {% set arch_os='x64' %}
-    {% elif base_arch == 'aarch64' %}
-        {% set arch_os='arm64' %}
-    {% endif %}
+ENV OPENSEARCH_INITIAL_ADMIN_PASSWORD="Kolla24OpenSearch"
 
-ARG opensearch_version=2.3.0
-ARG opensearch_url=https://artifacts.opensearch.org/releases/bundle/opensearch/${opensearch_version}/opensearch-${opensearch_version}-linux-{{ arch_os }}.tar.gz
-{% endblock %}
-
-ARG OPENSEARCH_HOME=/usr/share/opensearch
-
-RUN curl -o /tmp/opensearch.tgz ${opensearch_url} && \
-    tar -xzpf /tmp/opensearch.tgz -C $OPENSEARCH_HOME --strip-components=1 && \
-    rm /tmp/opensearch.tgz && \
-    mkdir -p $OPENSEARCH_HOME/data && chown -R opensearch:opensearch $OPENSEARCH_HOME/data
+{{ macros.install_packages(opensearch_packages | customizable("packages")) }}
 
 COPY extend_start.sh /usr/local/bin/kolla_extend_start
 RUN chmod 755 /usr/local/bin/kolla_extend_start

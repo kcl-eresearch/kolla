@@ -14,6 +14,7 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
     {% if base_package_type == 'rpm' %}
 
         {% set neutron_base_packages = [
+            'iproute-tc',
             'iputils',
             'keepalived',
             'net-tools',
@@ -54,8 +55,8 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
             'dnsmasq',
             'dnsmasq-utils',
             'haproxy',
+            'iproute-tc',
             'ipset',
-            'iptables',
             'iputils',
             'keepalived',
             'net-tools',
@@ -64,6 +65,16 @@ LABEL maintainer="{{ maintainer }}" name="{{ image_name }}" build-date="{{ build
             'radvd',
             'uuid'
         ] %}
+
+        {% if base_distro == "centos" and base_distro_tag.startswith('stream8') %}
+            {% set neutron_base_packages = neutron_base_packages + [
+                'iptables-1.8.4*'
+            ] %}
+        {% else %}
+            {% set neutron_base_packages = neutron_base_packages + [
+                'iptables'
+            ] %}
+        {% endif %}
 
     {% elif base_package_type == 'deb' %}
 
@@ -121,7 +132,7 @@ RUN ln -s neutron-base-source/* neutron \
 {% endif %}
 
 COPY neutron_sudoers /etc/sudoers.d/kolla_neutron_sudoers
-{% if base_distro_tag.startswith('stream9') %}
+{% if base_distro_tag.startswith('stream9') or base_distro == 'rocky' %}
 COPY extend_start_el9.sh /usr/local/bin/kolla_extend_start
 {% else %}
 COPY extend_start.sh /usr/local/bin/kolla_extend_start

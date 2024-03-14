@@ -161,6 +161,7 @@ ENV DEBIAN_FRONTEND noninteractive
             'postgresql-devel',
             'python3-devel',
             'python3-mod_wsgi',
+            'python3-pyroute2',
             'sqlite-devel',
             'zip'
         ] %}
@@ -182,6 +183,7 @@ ENV DEBIAN_FRONTEND noninteractive
             'libz-dev',
             'pkg-config',
             'python3-dev',
+            'python3-pyroute2',
             'zip'
         ] %}
 
@@ -272,7 +274,6 @@ ENV DEBIAN_FRONTEND noninteractive
         'pymysql',
         'pyngus',
         'pyparsing',
-        'pyroute2',
         'python-barbicanclient',
         'python-cinderclient',
         'python-cloudkittyclient',
@@ -330,7 +331,12 @@ RUN ln -s openstack-base-source/* /requirements \
 
 ENV PATH /var/lib/kolla/venv/bin:$PATH
 
+{# NOTE: pin setuptools on python 3.9 (centos,debian) due to horizon build failures #}
+{% if distro_python_version == '3.9' %}
+RUN {{ macros.install_pip(['pip', 'wheel', 'setuptools==67.2.*']) }} \
+{% else %}
 RUN {{ macros.install_pip(['pip', 'wheel', 'setuptools']) }} \
+{% endif %}
     && {{ macros.install_pip(openstack_base_pip_packages | customizable("pip_packages")) }}
 
 {% endif %}
